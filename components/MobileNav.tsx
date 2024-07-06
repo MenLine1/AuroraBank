@@ -33,7 +33,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
                             src="/icons/logo.svg"
                             width={34}
                             height={34}
-                            alt="Horizon logo"
+                            alt="Aurora logo"
                         />
                         <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">Aurora</h1>
                     </Link>
