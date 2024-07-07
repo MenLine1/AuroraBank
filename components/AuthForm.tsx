@@ -12,6 +12,7 @@ import CustomInput from './CustomInput';
 import { authFormSchema } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { signIn, signUp} from "@/lib/actions/user.actions";
 
 const AuthForm = ({ type }: { type: string }) => {
     const router = useRouter();
@@ -49,8 +50,20 @@ const AuthForm = ({ type }: { type: string }) => {
                     email: data.email,
                     password: data.password
                 }
+
+                const newUser = await signUp(userData);
+
+                setUser(newUser);
             }
 
+            if(type === 'sign-in') {
+                const response = await signIn({
+                    email: data.email,
+                    password: data.password,
+                })
+
+                if(response) router.push('/')
+            }
         } catch (error) {
             console.log(error);
         } finally {
@@ -66,9 +79,9 @@ const AuthForm = ({ type }: { type: string }) => {
                         src="/icons/logo.svg"
                         width={34}
                         height={34}
-                        alt="Horizon logo"
+                        alt="Aurora logo"
                     />
-                    <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">Horizon</h1>
+                    <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">Aurora</h1>
                 </Link>
 
                 <div className="flex flex-col gap-1 md:gap-3">
@@ -90,7 +103,7 @@ const AuthForm = ({ type }: { type: string }) => {
             </header>
             {user ? (
                 <div className="flex flex-col gap-4">
-                    <PlaidLink user={user} variant="primary" />
+                    {/*<PlaidLink user={user} variant="primary" />*/}
                 </div>
             ): (
                 <>
@@ -102,15 +115,15 @@ const AuthForm = ({ type }: { type: string }) => {
                                         <CustomInput control={form.control} name='firstName' label="First Name" placeholder='Enter your first name' />
                                         <CustomInput control={form.control} name='lastName' label="Last Name" placeholder='Enter your first name' />
                                     </div>
-                                    <CustomInput control={form.control} name='address1' label="Address" placeholder='Enter your address' />
-                                    <CustomInput control={form.control} name='city' label="City" placeholder='Enter your city' />
+                                        <CustomInput control={form.control} name='address1' label="Address" placeholder='Enter your address' />
+                                        <CustomInput control={form.control} name='city' label="City" placeholder='Enter your city' />
                                     <div className="flex gap-4">
-                                        <CustomInput control={form.control} name='state' label="State" placeholder='Example: NY' />
-                                        <CustomInput control={form.control} name='postalCode' label="Postal Code" placeholder='Example: 11-101' />
+                                        <CustomInput control={form.control} name='state' label="Region" placeholder='Example: Mazovia' />
+                                        <CustomInput control={form.control} name='postalCode' label="Postal Code" placeholder='Example: 11-111' />
                                     </div>
                                     <div className="flex gap-4">
                                         <CustomInput control={form.control} name='dateOfBirth' label="Date of Birth" placeholder='DD/MM/YYYY' />
-                                        <CustomInput control={form.control} name='ssn' label="SSN" placeholder='Example: 1234' />
+                                        <CustomInput control={form.control} name='ssn' label="SSN/PESEL" placeholder='Example: 01234567891' />
                                     </div>
                                 </>
                             )}
