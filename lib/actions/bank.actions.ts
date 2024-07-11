@@ -1,18 +1,11 @@
 "use server";
 
-import {
-    ACHClass,
-    CountryCode,
-    TransferAuthorizationCreateRequest,
-    TransferCreateRequest,
-    TransferNetwork,
-    TransferType,
-} from "plaid";
-import {plaidClient} from "../plaid";
-import {parseStringify} from "../utils";
-// import { getTransactionsByBankId } from "./transaction.actions";
-import {getBank, getBanks} from "./user.actions";
-import {Bank, getAccountProps, getAccountsProps, getInstitutionProps, getTransactionsProps} from "@/types";
+import {CountryCode} from "plaid";
+import { plaidClient } from "../plaid";
+import { parseStringify } from "../utils";
+import { getBanks, getBank } from "./user.actions";
+import {Bank, getAccountProps, getAccountsProps, getInstitutionProps, getTransactionsProps, Transaction} from "@/types";
+import {getTransactionsByBankId} from "@/lib/actions/transaction.actions";
 
 export const getAccounts = async ({ userId }: getAccountsProps) => {
     try {
@@ -38,7 +31,7 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
                     type: accountData.type as string,
                     subtype: accountData.subtype! as string,
                     appwriteItemId: bank.$id,
-                    sharableId: bank.shareableId,
+                    shareableId: bank.shareableId,
                 };
             })
         );
@@ -61,21 +54,21 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
             access_token: bank.accessToken,
         });
         const accountData = accountsResponse.data.accounts[0];
-        // const transferTransactionsData = await getTransactionsByBankId({
-        //     bankId: bank.$id,
-        // });
+        const transferTransactionsData = await getTransactionsByBankId({
+            bankId: bank.$id,
+        });
 
-        // const transferTransactions = transferTransactionsData.documents.map(
-        //     (transferData: Transaction) => ({
-        //         id: transferData.$id,
-        //         name: transferData.name!,
-        //         amount: transferData.amount!,
-        //         date: transferData.$createdAt,
-        //         paymentChannel: transferData.channel,
-        //         category: transferData.category,
-        //         type: transferData.senderBankId === bank.$id ? "debit" : "credit",
-        //     })
-        // );
+        const transferTransactions = transferTransactionsData.documents.map(
+            (transferData: Transaction) => ({
+                id: transferData.$id,
+                name: transferData.name!,
+                amount: transferData.amount!,
+                date: transferData.$createdAt,
+                paymentChannel: transferData.channel,
+                category: transferData.category,
+                type: transferData.senderBankId === bank.$id ? "debit" : "credit",
+            })
+        );
 
         const institution = await getInstitution({
             institutionId: accountsResponse.data.item.institution_id!,
@@ -98,8 +91,7 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
             appwriteItemId: bank.$id,
         };
 
-        const allTransactions = [...transactions].sort(
-        // const allTransactions = [...transactions, ...transferTransactions].sort(
+        const allTransactions = [...transactions, ...transferTransactions].sort(
             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
 
@@ -118,12 +110,12 @@ export const getInstitution = async ({
     try {
         const institutionResponse = await plaidClient.institutionsGetById({
             institution_id: institutionId,
-            country_codes: ["US, PL"] as CountryCode[],
+            country_codes: ["US"] as CountryCode[],
         });
 
-        const intitution = institutionResponse.data.institution;
+        const institution = institutionResponse.data.institution;
 
-        return parseStringify(intitution);
+        return parseStringify(institution);
     } catch (error) {
         console.error("An error occurred while getting the accounts:", error);
     }
@@ -140,6 +132,7 @@ export const getTransactions = async ({
             const response = await plaidClient.transactionsSync({
                 access_token: accessToken,
             });
+
             const data = response.data;
 
             transactions = response.data.added.map((transaction) => ({
@@ -154,50 +147,12 @@ export const getTransactions = async ({
                 date: transaction.date,
                 image: transaction.logo_url,
             }));
+
             hasMore = data.has_more;
         }
 
         return parseStringify(transactions);
     } catch (error) {
         console.error("An error occurred while getting the accounts:", error);
-    }
-};
-
-export const createTransfer = async () => {
-    const transferAuthRequest: TransferAuthorizationCreateRequest = {
-        access_token: "access-sandbox-cddd20c1-5ba8-4193-89f9-3a0b91034c25",
-        account_id: "Zl8GWV1jqdTgjoKnxQn1HBxxVBanm5FxZpnQk",
-        funding_account_id: "442d857f-fe69-4de2-a550-0c19dc4af467",
-        type: "credit" as TransferType,
-        network: "ach" as TransferNetwork,
-        amount: "10.00",
-        ach_class: "ppd" as ACHClass,
-        user: {
-            legal_name: "Anne Charleston",
-        },
-    };
-    try {
-        const transferAuthResponse =
-            await plaidClient.transferAuthorizationCreate(transferAuthRequest);
-        const authorizationId = transferAuthResponse.data.authorization.id;
-
-        const transferCreateRequest: TransferCreateRequest = {
-            access_token: "access-sandbox-cddd20c1-5ba8-4193-89f9-3a0b91034c25",
-            account_id: "Zl8GWV1jqdTgjoKnxQn1HBxxVBanm5FxZpnQk",
-            description: "payment",
-            authorization_id: authorizationId,
-        };
-
-        const responseCreateResponse = await plaidClient.transferCreate(
-            transferCreateRequest
-        );
-
-        const transfer = responseCreateResponse.data.transfer;
-        return parseStringify(transfer);
-    } catch (error) {
-        console.error(
-            "An error occurred while creating transfer authorization:",
-            error
-        );
     }
 };

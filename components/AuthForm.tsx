@@ -36,8 +36,6 @@ const AuthForm = ({ type }: { type: string }) => {
         setIsLoading(true);
 
         try {
-            // Sign up with Appwrite & create plaid token
-
             if(type === 'sign-up') {
                 const userData = {
                     firstName: data.firstName!,
@@ -54,7 +52,6 @@ const AuthForm = ({ type }: { type: string }) => {
                 const newUser = await signUp(userData);
                 setUser(newUser);
             }
-
             if(type === 'sign-in') {
                 const response = await signIn({
                     email: data.email,
