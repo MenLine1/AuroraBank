@@ -100,11 +100,11 @@ const AuthForm = ({ type }: { type: string }) => {
                     </h1>
                 </div>
             </header>
-            {/*{user ? (*/}
+            {user ? (
                 <div className="flex flex-col gap-4">
                     <PlaidLink user={user} variant="primary"/>
                 </div>
-            {/* ): ( */}
+             ): (
                 <>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -117,12 +117,12 @@ const AuthForm = ({ type }: { type: string }) => {
                                         <CustomInput control={form.control} name='address1' label="Address" placeholder='Enter your address' />
                                         <CustomInput control={form.control} name='city' label="City" placeholder='Enter your city' />
                                     <div className="flex gap-4">
-                                        <CustomInput control={form.control} name='state' label="Region" placeholder='Example: Mazovia' />
-                                        <CustomInput control={form.control} name='postalCode' label="Postal Code" placeholder='Example: 11-111' />
+                                        <CustomInput control={form.control} name='state' label="Region" placeholder='Example: NY or MZ' />
+                                        <CustomInput control={form.control} name='postalCode' label="Postal Code" placeholder='Example: 11111' />
                                     </div>
                                     <div className="flex gap-4">
-                                        <CustomInput control={form.control} name='dateOfBirth' label="Date of Birth" placeholder='DD/MM/YYYY' />
-                                        <CustomInput control={form.control} name='ssn' label="SSN/PESEL" placeholder='Example: 01234567891' />
+                                        <CustomInput control={form.control} name='dateOfBirth' label="Date of Birth" placeholder='YYYY-MM-DD' />
+                                        <CustomInput control={form.control} name='ssn' label="SSN" placeholder='Example: 1234' />
                                     </div>
                                 </>
                             )}
@@ -156,7 +156,7 @@ const AuthForm = ({ type }: { type: string }) => {
                         </Link>
                     </footer>
                 </>
-            )
+            )}
         </section>
     )
 }
