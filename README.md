@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AuroraBank
+
+AuroraBank is a fintech web application designed to manage your finances efficiently. Built with Next.js, TypeScript, Tailwind CSS and Appwrite, it allows users to connect multiple bank accounts, check transactions in real-time, transfer funds and more.
+
+## Features
+
+- **Authentication:** Secure SSR authentication with validations and authorization.
+- **Connect Banks:** Integrates with Plaid to link multiple bank accounts.
+- **Home Page:** Displays an overview of user accounts, including total balance, recent transactions, and spending categories.
+- **My Banks:** Lists all connected banks with balances and account details.
+- **Transaction History:** Offers pagination and filtering options for viewing transaction history.
+- **Real-time Updates:** Reflects changes across all relevant pages upon connecting new bank accounts.
+- **Funds Transfer:** Allows users to transfer funds using Dwolla, with necessary fields and recipient bank ID.
+- **Responsiveness:** Adapts seamlessly to various screen sizes and devices for a consistent user experience.
+
+## Technologies Used
+
+- **Next.js:** A React framework for building server-side rendered web applications.
+- **TypeScript:** A statically typed superset of JavaScript.
+- **Tailwind CSS:** A utility-first CSS framework for quickly styling web applications.
+- **Appwrite:** An open-source backend server for web developers.
+- **Plaid:** A service for connecting bank accounts.
+- **Dwolla:** A platform for transferring funds.
+- **Zod:** A TypeScript-first schema declaration and validation library.
+- **ShadCN:** A utility for connecting to various database systems.
 
 ## Getting Started
 
-First, run the development server:
+To run the AuroraBank application locally, follow these steps:
+
+### Prerequisites
+
+Make sure you have the following installed on your machine:
+
+- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/en)
+- [npm](https://www.npmjs.com/)
+
+### Cloning the Repository
+
+```bash
+git clone https://github.com/MenLine1/AuroraBank.git
+cd AuroraBank
+```
+
+### Installation
+
+Install the project dependencies using npm:
+
+```bash
+npm install
+```
+
+### Running the Project
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Contributing
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Contributions to AuroraBank are welcome! If you'd like to contribute, please follow these steps:
 
-## Learn More
+1. Fork the repository on GitHub.
+2. Create a new branch with a descriptive name for your feature or fix.
+3. Make your changes and commit them with clear, descriptive messages.
+4. Push your changes to your fork and submit a pull request to the main repository.
 
-To learn more about Next.js, take a look at the following resources:
+## Live Demo
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+You can try out the AuroraBank application live on [Vercel](https://aurora-bank-two.vercel.app).
+To fully experience all features, create your own account and connect your account using Plaid "good_user" login and password.
+Or use the provided test account:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Login:** test321@user.com
+- **Password:** testuser
